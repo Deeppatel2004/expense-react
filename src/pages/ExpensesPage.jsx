@@ -1,11 +1,13 @@
 
 import { useEffect, useState } from "react";
+
 import {
   listExpenses,
   createExpense,
   updateExpense,
   deleteExpense,
 } from "../api";
+
 import { formatMoney } from "../helpers";
 import ExpenseForm from "../components/ExpenseForm";
 
@@ -20,6 +22,7 @@ export default function ExpensesPage({ token, onAuthError }) {
   const [error, setError] = useState("");
   const [editingExpense, setEditingExpense] = useState(null);
 
+  // Load expenses
   async function loadExpenses() {
     try {
       setLoading(true);
@@ -120,15 +123,24 @@ export default function ExpensesPage({ token, onAuthError }) {
     }
   }
 
+  // Calculate total expenses
   const total = expenses.reduce(
     (sum, expense) => sum + Number(expense.amount),
     0
   );
 
   return (
-    <div>
-      <h1>My Expenses</h1>
+    <main className="expenses-page">
 
+      {/* Page heading */}
+      <header className="expenses-header">
+        <div>
+          <h1>My Expenses</h1>
+          <p>Manage and track your daily expenses.</p>
+        </div>
+      </header>
+
+      {/* Add / Edit Expense Form */}
       <ExpenseForm
         onAdd={handleAdd}
         onUpdate={handleUpdate}
@@ -136,63 +148,115 @@ export default function ExpensesPage({ token, onAuthError }) {
         onCancelEdit={() => setEditingExpense(null)}
       />
 
-      <h2>Expense List</h2>
+      {/* Expense List */}
+      <section className="expense-list-section">
 
-      {loading && <p>Loading...</p>}
+        <div className="expense-list-header">
+          <div>
+            <h2>Expense List</h2>
+            <p>{expenses.length} expenses recorded</p>
+          </div>
+        </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        {/* Loading */}
+        {loading && (
+          <p className="empty-message">
+            Loading expenses...
+          </p>
+        )}
 
-      {!loading && !error && expenses.length === 0 && (
-        <p>No expenses yet. Add your first one.</p>
-      )}
+        {/* Error */}
+        {error && (
+          <p className="error-message">
+            {error}
+          </p>
+        )}
 
-      {!loading && expenses.length > 0 && (
-        <>
-          <table border="1" cellPadding="10">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+        {/* Empty state */}
+        {!loading && !error && expenses.length === 0 && (
+          <p className="empty-message">
+            No expenses yet. Add your first expense.
+          </p>
+        )}
 
-            <tbody>
-              {expenses.map((expense) => {
-                const id = getExpenseId(expense);
+        {/* Expense Table */}
+        {!loading && expenses.length > 0 && (
+          <>
+            <div className="expense-table-wrapper">
+              <table className="expense-table">
 
-                return (
-                  <tr key={id}>
-                    <td>{String(expense.date).slice(0, 10)}</td>
-                    <td>{expense.title}</td>
-                    <td>{expense.category}</td>
-                    <td>{formatMoney(expense.amount)}</td>
-
-                    <td>
-                      <button
-                        onClick={() => handleEdit(expense)}
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => handleDelete(id)}
-                        disabled={!id}
-                      >
-                        Delete
-                      </button>
-                    </td>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Action</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                </thead>
 
-          <h3>Total: {formatMoney(total)}</h3>
-        </>
-      )}
-    </div>
+                <tbody>
+                  {expenses.map((expense) => {
+                    const id = getExpenseId(expense);
+
+                    return (
+                      <tr key={id}>
+                        <td>
+                          {String(expense.date).slice(0, 10)}
+                        </td>
+
+                        <td>{expense.title}</td>
+
+                        <td>
+                          <span className="category-badge">
+                            {expense.category}
+                          </span>
+                        </td>
+
+                        <td className="expense-amount">
+                          {formatMoney(expense.amount)}
+                        </td>
+
+                        <td>
+                          <div className="expense-actions">
+
+                            <button
+                              type="button"
+                              className="edit-button"
+                              onClick={() => handleEdit(expense)}
+                            >
+                              Edit
+                            </button>
+
+                            <button
+                              type="button"
+                              className="delete-button"
+                              onClick={() => handleDelete(id)}
+                              disabled={!id}
+                            >
+                              Delete
+                            </button>
+
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+
+              </table>
+            </div>
+
+            {/* Total */}
+            <div className="expense-total">
+              <span>Total Expenses</span>
+              <h3>{formatMoney(total)}</h3>
+            </div>
+          </>
+        )}
+
+      </section>
+
+    </main>
   );
 }

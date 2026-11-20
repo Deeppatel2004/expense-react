@@ -93,10 +93,10 @@ export default function ExpenseForm({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="expense-form" onSubmit={handleSubmit}>
       <h2>{editingExpense ? "Edit Expense" : "Add Expense"}</h2>
 
-      <div>
+      <div className="form-group">
         <label>Title</label>
         <input
           name="title"
@@ -106,7 +106,7 @@ export default function ExpenseForm({
         {errors.title && <p>{errors.title}</p>}
       </div>
 
-      <div>
+      <div className="form-group">
         <label>Amount</label>
         <input
           name="amount"
@@ -118,7 +118,7 @@ export default function ExpenseForm({
         {errors.amount && <p>{errors.amount}</p>}
       </div>
 
-      <div>
+      <div className="form-group">
         <label>Category</label>
         <select
           name="category"
@@ -136,7 +136,7 @@ export default function ExpenseForm({
         {errors.category && <p>{errors.category}</p>}
       </div>
 
-      <div>
+      <div className="form-group">
         <label>Date</label>
         <input
           name="date"
@@ -147,7 +147,7 @@ export default function ExpenseForm({
         {errors.date && <p>{errors.date}</p>}
       </div>
 
-      <div>
+      <div className="form-group notes-group">
         <label>Notes (optional)</label>
         <textarea
           name="notes"
@@ -157,26 +157,28 @@ export default function ExpenseForm({
       </div>
 
       {apiError && (
-        <p style={{ color: "red" }}>{apiError}</p>
+        <p className="form-error">{apiError}</p>
       )}
 
-      <button type="submit" disabled={saving}>
-        {saving
-          ? "Saving..."
-          : editingExpense
-            ? "Save"
-            : "Add Expense"}
-      </button>
-
-      {editingExpense && (
-        <button
-          type="button"
-          onClick={onCancelEdit}
-          disabled={saving}
-        >
-          Cancel
+      <div className="form-actions">
+        <button type="submit" disabled={saving}>
+          {saving
+            ? "Saving..."
+            : editingExpense
+              ? "Save"
+              : "Add Expense"}
         </button>
-      )}
+
+        {editingExpense && (
+          <button
+            type="button"
+            onClick={onCancelEdit}
+            disabled={saving}
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }

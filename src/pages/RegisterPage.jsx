@@ -37,44 +37,50 @@ export default function RegisterPage() {
   }
 
   return (
-    <div>
+    <main className="auth-page">
       <h1>Create Account</h1>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
 
-        <button disabled={loading}>
+        {error && <p className="form-error">{error}</p>}
+
+        <button type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>
       </form>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
       <p>
         Already have an account? <Link to="/login">Login</Link>
       </p>
-    </div>
+    </main>
   );
 }

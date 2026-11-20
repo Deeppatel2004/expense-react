@@ -33,11 +33,11 @@ export default function LoginPage({ handleLogin }) {
   }
 
   return (
-    <div>
+    <main className="auth-page">
       <h1>Login</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="form-group">
           <label>Email</label>
           <input
             type="email"
@@ -47,7 +47,7 @@ export default function LoginPage({ handleLogin }) {
           />
         </div>
 
-        <div>
+        <div className="form-group">
           <label>Password</label>
           <input
             type="password"
@@ -57,12 +57,12 @@ export default function LoginPage({ handleLogin }) {
           />
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="form-error">{error}</p>}
 
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
-    </div>
+    </main>
   );
 }
