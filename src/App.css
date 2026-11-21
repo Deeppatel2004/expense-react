@@ -530,3 +530,44 @@ nav button:hover {
   cursor: pointer;
 }
 
+
+.expense-summary {
+  margin-bottom: 25px;
+  padding: 20px;
+  border-radius: 10px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid #e5e7eb;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.summary-header input {
+  padding: 9px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.summary-card {
+  padding: 20px;
+  border-radius: 8px;
+  background: #f0f4ff;
+  margin-bottom: 20px;
+}
+
+.summary-card h2 {
+  margin-top: 8px;
+}
+
+.category-summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}

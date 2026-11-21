@@ -10,6 +10,7 @@ import {
 
 import { formatMoney } from "../helpers";
 import ExpenseForm from "../components/ExpenseForm";
+import ExpenseSummary from "../components/ExpenseSummary";
 
 function getExpenseId(expense) {
   return expense._id || expense.id;
@@ -28,7 +29,9 @@ export default function ExpensesPage({ token, onAuthError }) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // Load expenses
+  // Refresh summary when expenses change
+  const [refreshSummary, setRefreshSummary] = useState(0);
+
   async function loadExpenses() {
     try {
       setLoading(true);
@@ -57,6 +60,9 @@ export default function ExpensesPage({ token, onAuthError }) {
     try {
       await createExpense(token, expense);
       await loadExpenses();
+
+      // Refresh monthly summary
+      setRefreshSummary((prev) => prev + 1);
     } catch (err) {
       if (err.message === "401") {
         onAuthError();
@@ -82,6 +88,9 @@ export default function ExpensesPage({ token, onAuthError }) {
 
       setEditingExpense(null);
       await loadExpenses();
+
+      // Refresh monthly summary
+      setRefreshSummary((prev) => prev + 1);
     } catch (err) {
       if (err.message === "401") {
         onAuthError();
@@ -116,6 +125,9 @@ export default function ExpensesPage({ token, onAuthError }) {
       ) {
         setEditingExpense(null);
       }
+
+      // Refresh monthly summary
+      setRefreshSummary((prev) => prev + 1);
     } catch (err) {
       if (err.message === "401") {
         onAuthError();
@@ -172,7 +184,7 @@ export default function ExpensesPage({ token, onAuthError }) {
 
   return (
     <main className="expenses-page">
-
+      {/* Page heading */}
       <header className="expenses-header">
         <div>
           <h1>My Expenses</h1>
@@ -180,6 +192,14 @@ export default function ExpensesPage({ token, onAuthError }) {
         </div>
       </header>
 
+      {/* Expense Summary Dashboard */}
+      <ExpenseSummary
+        token={token}
+        onAuthError={onAuthError}
+        refresh={refreshSummary}
+      />
+
+      {/* Add / Edit Expense Form */}
       <ExpenseForm
         onAdd={handleAdd}
         onUpdate={handleUpdate}
@@ -187,8 +207,8 @@ export default function ExpensesPage({ token, onAuthError }) {
         onCancelEdit={() => setEditingExpense(null)}
       />
 
+      {/* Expense List */}
       <section className="expense-list-section">
-
         <div className="expense-list-header">
           <div>
             <h2>Expense List</h2>
@@ -200,7 +220,6 @@ export default function ExpensesPage({ token, onAuthError }) {
 
         {/* Search and Filters */}
         <div className="expense-filters">
-
           <input
             type="text"
             placeholder="Search by expense title..."
@@ -250,45 +269,43 @@ export default function ExpensesPage({ token, onAuthError }) {
             />
           </label>
 
-          <button
-            type="button"
-            onClick={clearFilters}
-          >
+          <button type="button" onClick={clearFilters}>
             Clear Filters
           </button>
-
         </div>
 
+        {/* Loading */}
         {loading && (
-          <p className="empty-message">
-            Loading expenses...
-          </p>
+          <p className="empty-message">Loading expenses...</p>
         )}
 
+        {/* Error */}
         {error && (
-          <p className="error-message">
-            {error}
-          </p>
+          <p className="error-message">{error}</p>
         )}
 
+        {/* Empty state */}
         {!loading && !error && expenses.length === 0 && (
           <p className="empty-message">
             No expenses yet. Add your first expense.
           </p>
         )}
 
-        {!loading && !error && expenses.length > 0 &&
+        {/* No matching expenses */}
+        {!loading &&
+          !error &&
+          expenses.length > 0 &&
           filteredExpenses.length === 0 && (
             <p className="empty-message">
               No matching expenses found.
             </p>
-        )}
+          )}
 
+        {/* Expense Table */}
         {!loading && !error && filteredExpenses.length > 0 && (
           <>
             <div className="expense-table-wrapper">
               <table className="expense-table">
-
                 <thead>
                   <tr>
                     <th>Date</th>
@@ -323,7 +340,6 @@ export default function ExpensesPage({ token, onAuthError }) {
 
                         <td>
                           <div className="expense-actions">
-
                             <button
                               type="button"
                               className="edit-button"
@@ -340,26 +356,23 @@ export default function ExpensesPage({ token, onAuthError }) {
                             >
                               Delete
                             </button>
-
                           </div>
                         </td>
                       </tr>
                     );
                   })}
                 </tbody>
-
               </table>
             </div>
 
+            {/* Filtered Total */}
             <div className="expense-total">
               <span>Filtered Total Expenses</span>
               <h3>{formatMoney(total)}</h3>
             </div>
           </>
         )}
-
       </section>
-
     </main>
   );
 }
