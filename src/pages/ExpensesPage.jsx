@@ -11,7 +11,6 @@ import {
 import { formatMoney } from "../helpers";
 import ExpenseForm from "../components/ExpenseForm";
 
-// Support both MongoDB _id and public API id
 function getExpenseId(expense) {
   return expense._id || expense.id;
 }
@@ -21,6 +20,13 @@ export default function ExpensesPage({ token, onAuthError }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editingExpense, setEditingExpense] = useState(null);
+
+  // Search and filter states
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [month, setMonth] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   // Load expenses
   async function loadExpenses() {
@@ -75,7 +81,6 @@ export default function ExpensesPage({ token, onAuthError }) {
       await updateExpense(token, id, updatedData);
 
       setEditingExpense(null);
-
       await loadExpenses();
     } catch (err) {
       if (err.message === "401") {
@@ -117,22 +122,57 @@ export default function ExpensesPage({ token, onAuthError }) {
         return;
       }
 
-      setError(
-        err.apiMessage || "Failed to delete expense."
-      );
+      setError(err.apiMessage || "Failed to delete expense.");
     }
   }
 
-  // Calculate total expenses
-  const total = expenses.reduce(
+  // Search and filter expenses
+  const filteredExpenses = expenses.filter((expense) => {
+    const matchesSearch = expense.title
+      .toLowerCase()
+      .includes(search.trim().toLowerCase());
+
+    const matchesCategory =
+      !category || expense.category === category;
+
+    const expenseDate = String(expense.date).slice(0, 10);
+
+    const matchesMonth =
+      !month || expenseDate.startsWith(month);
+
+    const matchesStartDate =
+      !startDate || expenseDate >= startDate;
+
+    const matchesEndDate =
+      !endDate || expenseDate <= endDate;
+
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesMonth &&
+      matchesStartDate &&
+      matchesEndDate
+    );
+  });
+
+  // Calculate filtered total
+  const total = filteredExpenses.reduce(
     (sum, expense) => sum + Number(expense.amount),
     0
   );
 
+  // Clear all filters
+  function clearFilters() {
+    setSearch("");
+    setCategory("");
+    setMonth("");
+    setStartDate("");
+    setEndDate("");
+  }
+
   return (
     <main className="expenses-page">
 
-      {/* Page heading */}
       <header className="expenses-header">
         <div>
           <h1>My Expenses</h1>
@@ -140,7 +180,6 @@ export default function ExpensesPage({ token, onAuthError }) {
         </div>
       </header>
 
-      {/* Add / Edit Expense Form */}
       <ExpenseForm
         onAdd={handleAdd}
         onUpdate={handleUpdate}
@@ -148,39 +187,104 @@ export default function ExpensesPage({ token, onAuthError }) {
         onCancelEdit={() => setEditingExpense(null)}
       />
 
-      {/* Expense List */}
       <section className="expense-list-section">
 
         <div className="expense-list-header">
           <div>
             <h2>Expense List</h2>
-            <p>{expenses.length} expenses recorded</p>
+            <p>
+              Showing {filteredExpenses.length} of {expenses.length} expenses
+            </p>
           </div>
         </div>
 
-        {/* Loading */}
+        {/* Search and Filters */}
+        <div className="expense-filters">
+
+          <input
+            type="text"
+            placeholder="Search by expense title..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">All Categories</option>
+            <option value="Food">Food</option>
+            <option value="Transport">Transport</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Bills">Bills</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Health">Health</option>
+            <option value="Education">Education</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label>
+            Month
+            <input
+              type="month"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+            />
+          </label>
+
+          <label>
+            From
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </label>
+
+          <label>
+            To
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </label>
+
+          <button
+            type="button"
+            onClick={clearFilters}
+          >
+            Clear Filters
+          </button>
+
+        </div>
+
         {loading && (
           <p className="empty-message">
             Loading expenses...
           </p>
         )}
 
-        {/* Error */}
         {error && (
           <p className="error-message">
             {error}
           </p>
         )}
 
-        {/* Empty state */}
         {!loading && !error && expenses.length === 0 && (
           <p className="empty-message">
             No expenses yet. Add your first expense.
           </p>
         )}
 
-        {/* Expense Table */}
-        {!loading && expenses.length > 0 && (
+        {!loading && !error && expenses.length > 0 &&
+          filteredExpenses.length === 0 && (
+            <p className="empty-message">
+              No matching expenses found.
+            </p>
+        )}
+
+        {!loading && !error && filteredExpenses.length > 0 && (
           <>
             <div className="expense-table-wrapper">
               <table className="expense-table">
@@ -196,7 +300,7 @@ export default function ExpensesPage({ token, onAuthError }) {
                 </thead>
 
                 <tbody>
-                  {expenses.map((expense) => {
+                  {filteredExpenses.map((expense) => {
                     const id = getExpenseId(expense);
 
                     return (
@@ -247,9 +351,8 @@ export default function ExpensesPage({ token, onAuthError }) {
               </table>
             </div>
 
-            {/* Total */}
             <div className="expense-total">
-              <span>Total Expenses</span>
+              <span>Filtered Total Expenses</span>
               <h3>{formatMoney(total)}</h3>
             </div>
           </>

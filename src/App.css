@@ -493,3 +493,40 @@ nav button:hover {
     padding: 20px;
   }
 }
+
+
+.expense-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+  align-items: end;
+}
+
+.expense-filters input,
+.expense-filters select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.expense-filters > input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.expense-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.expense-filters button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
