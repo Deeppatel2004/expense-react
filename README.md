@@ -128,5 +128,5 @@ Also manually test:
 - Debugging and testing a full-stack application
 
 ## Author
-
+Deep patel
 Developed as a full-stack learning project.
