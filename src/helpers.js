@@ -110,6 +110,15 @@ function searchExpenses(list, text) {
   });
 }
 
+// Q8. Calculate category bar width
+function barWidth(amount, total) {
+  if (!total || total <= 0) return "0%";
+
+  const percentage = (Number(amount) / Number(total)) * 100;
+
+  return `${percentage}%`;
+}
+
 export {
   formatMoney,
   toDateInput,
@@ -118,4 +127,5 @@ export {
   fieldErrors,
   monthOptions,
   searchExpenses,
+  barWidth,
 };
