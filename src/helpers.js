@@ -18,7 +18,7 @@ function toDateInput(value) {
 }
 
 // Q3. Build query string
-function buildQuery(params) {
+function buildQueryString(params) {
   const filtered = {};
 
   for (const key in params) {
@@ -74,10 +74,48 @@ function fieldErrors(form) {
   return errors;
 }
 
+// API filters: return an object
+export function buildQuery({ category, month }) {
+  const query = {};
+
+  if (category) query.category = category;
+  if (month) query.month = month;
+
+  return query;
+}
+
+// Q6. Get unique months, newest first
+function monthOptions(expenses) {
+  const months = expenses
+    .map((expense) => String(expense.date).slice(0, 7))
+    .filter((month) => /^\d{4}-\d{2}$/.test(month));
+
+  return [...new Set(months)].sort((a, b) => b.localeCompare(a));
+}
+
+// Q7. Search expenses by title or notes
+function searchExpenses(list, text) {
+  const searchText = text.trim().toLowerCase();
+
+  if (!searchText) return list;
+
+  return list.filter((expense) => {
+    const title = (expense.title || "").toLowerCase();
+    const notes = (expense.notes || "").toLowerCase();
+
+    return (
+      title.includes(searchText) ||
+      notes.includes(searchText)
+    );
+  });
+}
+
 export {
   formatMoney,
   toDateInput,
-  buildQuery,
+  buildQueryString,
   sortExpenses,
   fieldErrors,
+  monthOptions,
+  searchExpenses,
 };
