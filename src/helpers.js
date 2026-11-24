@@ -1,4 +1,3 @@
-
 // Q1. Format money
 function formatMoney(amount) {
   return `₹${(Number(amount) || 0).toFixed(2)}`;
@@ -103,10 +102,7 @@ function searchExpenses(list, text) {
     const title = (expense.title || "").toLowerCase();
     const notes = (expense.notes || "").toLowerCase();
 
-    return (
-      title.includes(searchText) ||
-      notes.includes(searchText)
-    );
+    return title.includes(searchText) || notes.includes(searchText);
   });
 }
 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { CATEGORIES } from "../constants";
 import { toDateInput, fieldErrors } from "../helpers";
@@ -84,17 +83,20 @@ export default function ExpenseForm({
 
       setErrors({});
     } catch (err) {
-      setApiError(
-        err.apiMessage || err.message || "Failed to save expense."
-      );
+      setApiError(err.apiMessage || err.message || "Failed to save expense.");
     } finally {
       setSaving(false);
     }
   }
 
   return (
-    <form className="mb-7 grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_8px_30px_rgba(30,41,59,0.06)] sm:grid-cols-2 sm:p-6" onSubmit={handleSubmit}>
-      <h2 className="text-xl font-extrabold text-slate-800 sm:col-span-2">{editingExpense ? "Edit Expense" : "Add Expense"}</h2>
+    <form
+      className="mb-7 grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_8px_30px_rgba(30,41,59,0.06)] sm:grid-cols-2 sm:p-6"
+      onSubmit={handleSubmit}
+    >
+      <h2 className="text-xl font-extrabold text-slate-800 sm:col-span-2">
+        {editingExpense ? "Edit Expense" : "Add Expense"}
+      </h2>
 
       <div className="flex min-w-0 flex-col gap-2">
         <label className="text-sm font-bold text-slate-800">Title</label>
@@ -117,7 +119,9 @@ export default function ExpenseForm({
           value={form.amount}
           onChange={handleChange}
         />
-        {errors.amount && <p className="text-sm text-red-600">{errors.amount}</p>}
+        {errors.amount && (
+          <p className="text-sm text-red-600">{errors.amount}</p>
+        )}
       </div>
 
       <div className="flex min-w-0 flex-col gap-2">
@@ -136,7 +140,9 @@ export default function ExpenseForm({
             </option>
           ))}
         </select>
-        {errors.category && <p className="text-sm text-red-600">{errors.category}</p>}
+        {errors.category && (
+          <p className="text-sm text-red-600">{errors.category}</p>
+        )}
       </div>
 
       <div className="flex min-w-0 flex-col gap-2">
@@ -152,7 +158,9 @@ export default function ExpenseForm({
       </div>
 
       <div className="flex min-w-0 flex-col gap-2 sm:col-span-2">
-        <label className="text-sm font-bold text-slate-800">Notes (optional)</label>
+        <label className="text-sm font-bold text-slate-800">
+          Notes (optional)
+        </label>
         <textarea
           className="min-h-24 w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-base text-slate-800 outline-none transition focus:border-violet-500 focus:ring-3 focus:ring-violet-500/10"
           name="notes"
@@ -166,12 +174,12 @@ export default function ExpenseForm({
       )}
 
       <div className="flex flex-col gap-2 sm:col-span-2 sm:flex-row">
-        <button className="min-h-11 w-full rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-extrabold text-white transition hover:-translate-y-px hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none sm:w-auto" type="submit" disabled={saving}>
-          {saving
-            ? "Saving..."
-            : editingExpense
-              ? "Save"
-              : "Add Expense"}
+        <button
+          className="min-h-11 w-full rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-extrabold text-white transition hover:-translate-y-px hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none sm:w-auto"
+          type="submit"
+          disabled={saving}
+        >
+          {saving ? "Saving..." : editingExpense ? "Save" : "Add Expense"}
         </button>
 
         {editingExpense && (

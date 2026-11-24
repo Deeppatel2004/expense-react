@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from "react";
 
 import {
@@ -126,13 +125,10 @@ export default function ExpensesPage({ token, onAuthError }) {
       await deleteExpense(token, id);
 
       setExpenses((prev) =>
-        prev.filter((expense) => getExpenseId(expense) !== id)
+        prev.filter((expense) => getExpenseId(expense) !== id),
       );
 
-      if (
-        editingExpense &&
-        getExpenseId(editingExpense) === id
-      ) {
+      if (editingExpense && getExpenseId(editingExpense) === id) {
         setEditingExpense(null);
       }
 
@@ -157,11 +153,9 @@ export default function ExpensesPage({ token, onAuthError }) {
   const filteredExpenses = sortedExpenses.filter((expense) => {
     const expenseDate = String(expense.date).slice(0, 10);
 
-    const matchesStartDate =
-      !startDate || expenseDate >= startDate;
+    const matchesStartDate = !startDate || expenseDate >= startDate;
 
-    const matchesEndDate =
-      !endDate || expenseDate <= endDate;
+    const matchesEndDate = !endDate || expenseDate <= endDate;
 
     return matchesStartDate && matchesEndDate;
   });
@@ -172,7 +166,7 @@ export default function ExpensesPage({ token, onAuthError }) {
   // Calculate filtered total
   const total = filteredExpenses.reduce(
     (sum, expense) => sum + Number(expense.amount),
-    0
+    0,
   );
 
   // Clear all filters
@@ -187,7 +181,6 @@ export default function ExpensesPage({ token, onAuthError }) {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-3 py-6 sm:px-6 sm:py-10">
-
       {/* Page heading */}
       <header className="mb-5 flex items-center justify-between">
         <div>
@@ -218,7 +211,6 @@ export default function ExpensesPage({ token, onAuthError }) {
 
       {/* Expense List */}
       <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-[0_8px_30px_rgba(30,41,59,0.06)] sm:p-6">
-
         <div className="mb-4">
           <h2 className="text-xl font-extrabold text-slate-800">
             Expense List
@@ -231,7 +223,6 @@ export default function ExpensesPage({ token, onAuthError }) {
 
         {/* Search and Filters */}
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-
           {/* Search */}
           <input
             className="min-h-11 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-violet-500 sm:min-w-52 sm:flex-1"
@@ -272,7 +263,6 @@ export default function ExpensesPage({ token, onAuthError }) {
           {/* Dynamic Month Filter */}
           <label className="flex w-full flex-col gap-1 text-sm text-slate-600 sm:w-auto">
             Month
-
             <select
               className="min-h-11 rounded-lg border border-slate-200 px-3 py-2"
               value={month}
@@ -291,7 +281,6 @@ export default function ExpensesPage({ token, onAuthError }) {
           {/* Start Date */}
           <label className="flex w-full flex-col gap-1 text-sm text-slate-600 sm:w-auto">
             From
-
             <input
               className="min-h-11 rounded-lg border border-slate-200 px-3 py-2"
               type="date"
@@ -303,7 +292,6 @@ export default function ExpensesPage({ token, onAuthError }) {
           {/* End Date */}
           <label className="flex w-full flex-col gap-1 text-sm text-slate-600 sm:w-auto">
             To
-
             <input
               className="min-h-11 rounded-lg border border-slate-200 px-3 py-2"
               type="date"
@@ -324,23 +312,15 @@ export default function ExpensesPage({ token, onAuthError }) {
 
         {/* Loading */}
         {loading && (
-          <p className="py-8 text-center text-slate-500">
-            Loading expenses...
-          </p>
+          <p className="py-8 text-center text-slate-500">Loading expenses...</p>
         )}
 
         {/* Error */}
-        {error && (
-          <p className="py-8 text-center text-red-600">
-            {error}
-          </p>
-        )}
+        {error && <p className="py-8 text-center text-red-600">{error}</p>}
 
         {/* No Expenses Yet */}
         {!loading && !error && expenses.length === 0 && (
-          <p className="py-8 text-center text-slate-500">
-            No expenses yet.
-          </p>
+          <p className="py-8 text-center text-slate-500">No expenses yet.</p>
         )}
 
         {/* No Matching Expenses */}
