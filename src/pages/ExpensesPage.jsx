@@ -58,9 +58,9 @@ const data = await listExpenses(token);
     } finally {
       setLoading(false);
     }
-  },  [token, onAuthError]);
+  }, [token, onAuthError]);
 
-  // Fetch again when token, category, or month changes
+// Fetch all expenses when token changes
   useEffect(() => {
     loadExpenses();
   }, [loadExpenses]);
