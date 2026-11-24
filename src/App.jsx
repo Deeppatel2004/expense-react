@@ -1,12 +1,5 @@
-
 import { useState } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  Link,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -34,7 +27,7 @@ function parseAuth(raw) {
 
 function AppContent() {
   const [auth, setAuth] = useState(() =>
-    parseAuth(localStorage.getItem("auth"))
+    parseAuth(localStorage.getItem("auth")),
   );
 
   // Login
@@ -138,10 +131,7 @@ function AppContent() {
           path="/"
           element={
             <RequireAuth auth={auth}>
-              <ExpensesPage
-                token={auth?.token}
-                onAuthError={handleLogout}
-              />
+              <ExpensesPage token={auth?.token} onAuthError={handleLogout} />
             </RequireAuth>
           }
         />
@@ -151,10 +141,7 @@ function AppContent() {
           path="/summary"
           element={
             <RequireAuth auth={auth}>
-              <SummaryPage
-                token={auth?.token}
-                onAuthError={handleLogout}
-              />
+              <SummaryPage token={auth?.token} onAuthError={handleLogout} />
             </RequireAuth>
           }
         />

@@ -1,4 +1,3 @@
-
 const BASE = import.meta.env.VITE_API_URL;
 
 // Add token to request headers
@@ -23,8 +22,7 @@ async function request(url, options = {}) {
     const error = new Error(String(res.status));
 
     error.status = res.status;
-    error.apiMessage =
-      data?.message || data?.error || "Something went wrong.";
+    error.apiMessage = data?.message || data?.error || "Something went wrong.";
 
     throw error;
   }

@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from "react";
 
 import {
@@ -45,7 +44,7 @@ export default function ExpensesPage({ token, onAuthError }) {
       setLoading(true);
       setError("");
 
-const data = await listExpenses(token);
+      const data = await listExpenses(token);
 
       setExpenses(data.expenses);
     } catch (err) {
@@ -60,7 +59,7 @@ const data = await listExpenses(token);
     }
   }, [token, onAuthError]);
 
-// Fetch all expenses when token changes
+  // Fetch all expenses when token changes
   useEffect(() => {
     loadExpenses();
   }, [loadExpenses]);
@@ -124,13 +123,10 @@ const data = await listExpenses(token);
       await deleteExpense(token, id);
 
       setExpenses((prev) =>
-        prev.filter((expense) => getExpenseId(expense) !== id)
+        prev.filter((expense) => getExpenseId(expense) !== id),
       );
 
-      if (
-        editingExpense &&
-        getExpenseId(editingExpense) === id
-      ) {
+      if (editingExpense && getExpenseId(editingExpense) === id) {
         setEditingExpense(null);
       }
 
@@ -145,24 +141,19 @@ const data = await listExpenses(token);
     }
   }
 
-// Apply category and month filters locally
-const categoryMonthExpenses = expenses.filter((expense) => {
-  const expenseMonth = String(expense.date).slice(0, 7);
+  // Apply category and month filters locally
+  const categoryMonthExpenses = expenses.filter((expense) => {
+    const expenseMonth = String(expense.date).slice(0, 7);
 
-  const matchesCategory =
-    !category || expense.category === category;
+    const matchesCategory = !category || expense.category === category;
 
-  const matchesMonth =
-    !month || expenseMonth === month;
+    const matchesMonth = !month || expenseMonth === month;
 
-  return matchesCategory && matchesMonth;
-});
+    return matchesCategory && matchesMonth;
+  });
 
-// Search by title or notes
-const searchedExpenses = searchExpenses(
-  categoryMonthExpenses,
-  search
-);
+  // Search by title or notes
+  const searchedExpenses = searchExpenses(categoryMonthExpenses, search);
 
   // Sort expenses
   const sortedExpenses = sortExpenses(searchedExpenses, sort);
@@ -171,11 +162,9 @@ const searchedExpenses = searchExpenses(
   const filteredExpenses = sortedExpenses.filter((expense) => {
     const expenseDate = String(expense.date).slice(0, 10);
 
-    const matchesStartDate =
-      !startDate || expenseDate >= startDate;
+    const matchesStartDate = !startDate || expenseDate >= startDate;
 
-    const matchesEndDate =
-      !endDate || expenseDate <= endDate;
+    const matchesEndDate = !endDate || expenseDate <= endDate;
 
     return matchesStartDate && matchesEndDate;
   });
@@ -186,7 +175,7 @@ const searchedExpenses = searchExpenses(
   // Calculate filtered total
   const total = filteredExpenses.reduce(
     (sum, expense) => sum + Number(expense.amount),
-    0
+    0,
   );
 
   // Clear all filters
@@ -201,7 +190,6 @@ const searchedExpenses = searchExpenses(
 
   return (
     <main className="mx-auto w-full max-w-6xl px-3 py-6 sm:px-6 sm:py-10">
-
       {/* Page heading */}
       <header className="mb-5 flex items-center justify-between">
         <div>
@@ -232,7 +220,6 @@ const searchedExpenses = searchExpenses(
 
       {/* Expense List */}
       <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-[0_8px_30px_rgba(30,41,59,0.06)] sm:p-6">
-
         <div className="mb-4">
           <h2 className="text-xl font-extrabold text-slate-800">
             Expense List
@@ -245,7 +232,6 @@ const searchedExpenses = searchExpenses(
 
         {/* Search and Filters */}
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-
           {/* Search */}
           <input
             className="min-h-11 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-violet-500 sm:min-w-52 sm:flex-1"
@@ -286,7 +272,6 @@ const searchedExpenses = searchExpenses(
           {/* Dynamic Month Filter */}
           <label className="flex w-full flex-col gap-1 text-sm text-slate-600 sm:w-auto">
             Month
-
             <select
               className="min-h-11 rounded-lg border border-slate-200 px-3 py-2"
               value={month}
@@ -305,7 +290,6 @@ const searchedExpenses = searchExpenses(
           {/* Start Date */}
           <label className="flex w-full flex-col gap-1 text-sm text-slate-600 sm:w-auto">
             From
-
             <input
               className="min-h-11 rounded-lg border border-slate-200 px-3 py-2"
               type="date"
@@ -317,7 +301,6 @@ const searchedExpenses = searchExpenses(
           {/* End Date */}
           <label className="flex w-full flex-col gap-1 text-sm text-slate-600 sm:w-auto">
             To
-
             <input
               className="min-h-11 rounded-lg border border-slate-200 px-3 py-2"
               type="date"
@@ -338,34 +321,38 @@ const searchedExpenses = searchExpenses(
 
         {/* Loading */}
         {loading && (
-          <p className="py-8 text-center text-slate-500">
-            Loading expenses...
-          </p>
+          <p className="py-8 text-center text-slate-500">Loading expenses...</p>
         )}
 
         {/* Error */}
-        {error && (
-          <p className="py-8 text-center text-red-600">
-            {error}
+        {error && <p className="py-8 text-center text-red-600">{error}</p>}
+
+        {/* No Expenses Yet */}
+        {!loading && !error && expenses.length === 0 && (
+          <p className="py-8 text-center text-slate-500">
+            No expenses yet. Add your first expense!
           </p>
         )}
 
-{/* No Expenses Yet */}
-{!loading && !error && expenses.length === 0 && (
-  <p className="py-8 text-center text-slate-500">
-    No expenses yet. Add your first expense!
-  </p>
-)}
+        {/* No Matching Expenses */}
+        {!loading &&
+          !error &&
+          expenses.length > 0 &&
+          filteredExpenses.length === 0 && (
+            <p className="py-8 text-center text-slate-500">
+              No expenses found. Try changing your search or filters.
+            </p>
+          )}
 
-{/* No Matching Expenses */}
-{!loading &&
-  !error &&
-  expenses.length > 0 &&
-  filteredExpenses.length === 0 && (
-    <p className="py-8 text-center text-slate-500">
-      No expenses found. Try changing your search or filters.
-    </p>
-  )}
+        {/* No Matching Expenses */}
+        {!loading &&
+          !error &&
+          expenses.length > 0 &&
+          filteredExpenses.length === 0 && (
+            <p className="py-8 text-center text-slate-500">
+              No expenses found. Try changing your search or filters.
+            </p>
+          )}
 
         {/* Expense Table */}
         {!loading && !error && filteredExpenses.length > 0 && (

@@ -7,9 +7,7 @@ export default function SummaryPage({ token, onAuthError }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [month, setMonth] = useState(
-    new Date().toISOString().slice(0, 7)
-  );
+  const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
 
   useEffect(() => {
     async function loadSummary() {
@@ -71,20 +69,20 @@ export default function SummaryPage({ token, onAuthError }) {
           </h2>
 
           {summary.biggestExpense && (
-  <div className="mt-5 rounded-xl bg-violet-50 p-4">
-    <p className="text-sm font-semibold text-slate-500">
-      Biggest Single Expense
-    </p>
+            <div className="mt-5 rounded-xl bg-violet-50 p-4">
+              <p className="text-sm font-semibold text-slate-500">
+                Biggest Single Expense
+              </p>
 
-    <p className="mt-1 text-lg font-bold text-slate-800">
-      {summary.biggestExpense.title}
-    </p>
+              <p className="mt-1 text-lg font-bold text-slate-800">
+                {summary.biggestExpense.title}
+              </p>
 
-    <p className="text-xl font-extrabold text-violet-700">
-      {formatMoney(summary.biggestExpense.amount)}
-    </p>
-  </div>
-)}
+              <p className="text-xl font-extrabold text-violet-700">
+                {formatMoney(summary.biggestExpense.amount)}
+              </p>
+            </div>
+          )}
 
           {summary.byCategory.length === 0 ? (
             <p className="mt-8 text-center text-slate-500">
@@ -98,20 +96,15 @@ export default function SummaryPage({ token, onAuthError }) {
 
               {summary.byCategory.map((item) => {
                 const percentage =
-                  summary.total > 0
-                    ? (item.total / summary.total) * 100
-                    : 0;
+                  summary.total > 0 ? (item.total / summary.total) * 100 : 0;
 
                 return (
                   <div key={item.category} className="mb-5">
                     <div className="mb-2 flex justify-between text-sm">
-                      <span className="font-semibold">
-                        {item.category}
-                      </span>
+                      <span className="font-semibold">{item.category}</span>
 
                       <span>
-                        {formatMoney(item.total)} (
-                        {percentage.toFixed(1)}%)
+                        {formatMoney(item.total)} ({percentage.toFixed(1)}%)
                       </span>
                     </div>
 

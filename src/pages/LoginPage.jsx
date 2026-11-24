@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api";
@@ -25,7 +24,7 @@ export default function LoginPage({ handleLogin }) {
       setError(
         err.message === "401"
           ? "Invalid email or password"
-          : "Login failed. Please try again."
+          : "Login failed. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -34,9 +33,14 @@ export default function LoginPage({ handleLogin }) {
 
   return (
     <main className="mx-auto w-full max-w-md px-4 py-8 text-center sm:px-6 sm:py-16">
-      <h1 className="mb-5 text-3xl font-extrabold tracking-tight text-slate-800">Login</h1>
+      <h1 className="mb-5 text-3xl font-extrabold tracking-tight text-slate-800">
+        Login
+      </h1>
 
-      <form className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-[0_8px_30px_rgba(30,41,59,0.06)] sm:p-7" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-[0_8px_30px_rgba(30,41,59,0.06)] sm:p-7"
+        onSubmit={handleSubmit}
+      >
         <div className="flex flex-col gap-2">
           <label className="text-sm font-bold text-slate-800">Email</label>
           <input
@@ -61,7 +65,11 @@ export default function LoginPage({ handleLogin }) {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <button className="mt-1 min-h-11 w-full rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-extrabold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50" type="submit" disabled={loading}>
+        <button
+          className="mt-1 min-h-11 w-full rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-extrabold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
