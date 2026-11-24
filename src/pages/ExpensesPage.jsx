@@ -10,7 +10,6 @@ import {
 
 import {
   formatMoney,
-  buildQuery,
   sortExpenses,
   monthOptions,
   searchExpenses,
@@ -46,8 +45,7 @@ export default function ExpensesPage({ token, onAuthError }) {
       setLoading(true);
       setError("");
 
-      const query = buildQuery({ category, month });
-      const data = await listExpenses(token, query);
+const data = await listExpenses(token);
 
       setExpenses(data.expenses);
     } catch (err) {
@@ -60,9 +58,9 @@ export default function ExpensesPage({ token, onAuthError }) {
     } finally {
       setLoading(false);
     }
-  }, [token, category, month, onAuthError]);
+  }, [token, onAuthError]);
 
-  // Fetch again when token, category, or month changes
+// Fetch all expenses when token changes
   useEffect(() => {
     loadExpenses();
   }, [loadExpenses]);
@@ -147,8 +145,24 @@ export default function ExpensesPage({ token, onAuthError }) {
     }
   }
 
-  // Search by title or notes
-  const searchedExpenses = searchExpenses(expenses, search);
+// Apply category and month filters locally
+const categoryMonthExpenses = expenses.filter((expense) => {
+  const expenseMonth = String(expense.date).slice(0, 7);
+
+  const matchesCategory =
+    !category || expense.category === category;
+
+  const matchesMonth =
+    !month || expenseMonth === month;
+
+  return matchesCategory && matchesMonth;
+});
+
+// Search by title or notes
+const searchedExpenses = searchExpenses(
+  categoryMonthExpenses,
+  search
+);
 
   // Sort expenses
   const sortedExpenses = sortExpenses(searchedExpenses, sort);
@@ -336,22 +350,22 @@ export default function ExpensesPage({ token, onAuthError }) {
           </p>
         )}
 
-        {/* No Expenses Yet */}
-        {!loading && !error && expenses.length === 0 && (
-          <p className="py-8 text-center text-slate-500">
-            No expenses yet.
-          </p>
-        )}
+{/* No Expenses Yet */}
+{!loading && !error && expenses.length === 0 && (
+  <p className="py-8 text-center text-slate-500">
+    No expenses yet. Add your first expense!
+  </p>
+)}
 
-        {/* No Matching Expenses */}
-        {!loading &&
-          !error &&
-          expenses.length > 0 &&
-          filteredExpenses.length === 0 && (
-            <p className="py-8 text-center text-slate-500">
-              No expenses match these filters.
-            </p>
-          )}
+{/* No Matching Expenses */}
+{!loading &&
+  !error &&
+  expenses.length > 0 &&
+  filteredExpenses.length === 0 && (
+    <p className="py-8 text-center text-slate-500">
+      No expenses found. Try changing your search or filters.
+    </p>
+  )}
 
         {/* Expense Table */}
         {!loading && !error && filteredExpenses.length > 0 && (
