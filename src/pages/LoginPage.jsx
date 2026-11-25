@@ -20,13 +20,10 @@ export default function LoginPage({ handleLogin }) {
 
       handleLogin(data);
       navigate("/");
-    } catch (err) {
-      setError(
-        err.message === "401"
-          ? "Invalid email or password"
-          : "Login failed. Please try again.",
-      );
+    }  catch (err) {
+      setError(err.apiMessage || "Something went wrong.");
     } finally {
+
       setLoading(false);
     }
   }

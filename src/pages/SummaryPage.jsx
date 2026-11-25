@@ -17,13 +17,13 @@ export default function SummaryPage({ token, onAuthError }) {
 
         const data = await getSummary(token, month);
         setSummary(data);
-      } catch (err) {
-        if (err.message === "401" || err.status === 401) {
+            } catch (err) {
+        if (err.status === 401) {
           onAuthError();
           return;
         }
 
-        setError("Failed to load expense summary.");
+        setError(err.apiMessage || "Something went wrong.");
       } finally {
         setLoading(false);
       }

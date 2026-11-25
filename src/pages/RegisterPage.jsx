@@ -23,13 +23,7 @@ export default function RegisterPage() {
         state: { message: "Registration successful! Please login." },
       });
     } catch (err) {
-      if (err.message === "409") {
-        setError("Email already registered.");
-      } else if (err.message === "400") {
-        setError("Please check your registration details.");
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
+      setError(err.apiMessage || "Something went wrong.");
     } finally {
       setLoading(false);
     }

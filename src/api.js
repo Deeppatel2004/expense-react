@@ -4,7 +4,6 @@ const BASE = import.meta.env.VITE_API_URL;
 function authHeaders(token) {
   return {
     Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
   };
 }
 
@@ -69,7 +68,10 @@ export function listExpenses(token, query = {}) {
 export function createExpense(token, body) {
   return request("/expenses", {
     method: "POST",
-    headers: authHeaders(token),
+    headers: {
+      ...authHeaders(token),
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(body),
   });
 }
@@ -78,7 +80,10 @@ export function createExpense(token, body) {
 export function updateExpense(token, id, body) {
   return request(`/expenses/${id}`, {
     method: "PATCH",
-    headers: authHeaders(token),
+    headers: {
+      ...authHeaders(token),
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(body),
   });
 }
