@@ -83,7 +83,7 @@ export default function ExpenseForm({
 
       setErrors({});
     } catch (err) {
-      setApiError(err.apiMessage || err.message || "Failed to save expense.");
+      setApiError(err.apiMessage || "Something went wrong.");
     } finally {
       setSaving(false);
     }

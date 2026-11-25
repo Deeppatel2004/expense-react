@@ -47,13 +47,13 @@ export default function ExpensesPage({ token, onAuthError }) {
       const data = await listExpenses(token);
 
       setExpenses(data.expenses);
-    } catch (err) {
-      if (err.message === "401") {
+    }  catch (err) {
+      if (err.status === 401) {
         onAuthError();
         return;
       }
 
-      setError("Failed to load expenses.");
+      setError(err.apiMessage || "Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -71,8 +71,8 @@ export default function ExpensesPage({ token, onAuthError }) {
       await loadExpenses();
 
       setRefreshSummary((prev) => prev + 1);
-    } catch (err) {
-      if (err.message === "401") {
+       } catch (err) {
+      if (err.status === 401) {
         onAuthError();
         return;
       }
@@ -99,7 +99,7 @@ export default function ExpensesPage({ token, onAuthError }) {
 
       setRefreshSummary((prev) => prev + 1);
     } catch (err) {
-      if (err.message === "401") {
+      if (err.status === 401) {
         onAuthError();
         return;
       }
@@ -131,13 +131,13 @@ export default function ExpensesPage({ token, onAuthError }) {
       }
 
       setRefreshSummary((prev) => prev + 1);
-    } catch (err) {
-      if (err.message === "401") {
+       } catch (err) {
+      if (err.status === 401) {
         onAuthError();
         return;
       }
 
-      setError(err.apiMessage || "Failed to delete expense.");
+      setError(err.apiMessage || "Something went wrong.");
     }
   }
 
