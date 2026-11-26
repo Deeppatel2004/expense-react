@@ -99,8 +99,14 @@ export default function ExpenseForm({
       </h2>
 
       <div className="flex min-w-0 flex-col gap-2">
-        <label className="text-sm font-bold text-slate-800">Title</label>
+        <label
+          htmlFor="expense-title"
+          className="text-sm font-bold text-slate-800"
+        >
+          Title
+        </label>
         <input
+          id="expense-title"
           className="min-h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-base text-slate-800 outline-none transition focus:border-violet-500 focus:ring-3 focus:ring-violet-500/10"
           name="title"
           value={form.title}
