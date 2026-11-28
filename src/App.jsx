@@ -1,6 +1,14 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 
+import { useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Link,
+} from "react-router-dom";
+
+import BudgetsPage from "./pages/BudgetsPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ExpensesPage from "./pages/ExpensesPage";
@@ -77,6 +85,13 @@ function AppContent() {
               Summary
             </Link>
 
+            <Link
+              className="font-semibold text-slate-700 no-underline hover:text-violet-600"
+              to="/budgets"
+            >
+              Budgets
+            </Link>
+
             <button
               className="min-h-10 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-800 transition hover:border-violet-500 hover:text-violet-600"
               onClick={handleLogout}
@@ -104,6 +119,7 @@ function AppContent() {
       </nav>
 
       <Routes>
+        {/* Login Page */}
         <Route
           path="/login"
           element={
@@ -115,6 +131,7 @@ function AppContent() {
           }
         />
 
+        {/* Register Page */}
         <Route
           path="/register"
           element={
@@ -131,7 +148,10 @@ function AppContent() {
           path="/"
           element={
             <RequireAuth auth={auth}>
-              <ExpensesPage token={auth?.token} onAuthError={handleLogout} />
+              <ExpensesPage
+                token={auth?.token}
+                onAuthError={handleLogout}
+              />
             </RequireAuth>
           }
         />
@@ -141,7 +161,23 @@ function AppContent() {
           path="/summary"
           element={
             <RequireAuth auth={auth}>
-              <SummaryPage token={auth?.token} onAuthError={handleLogout} />
+              <SummaryPage
+                token={auth?.token}
+                onAuthError={handleLogout}
+              />
+            </RequireAuth>
+          }
+        />
+
+        {/* Protected Budgets Page */}
+        <Route
+          path="/budgets"
+          element={
+            <RequireAuth auth={auth}>
+              <BudgetsPage
+                token={auth?.token}
+                onAuthError={handleLogout}
+              />
             </RequireAuth>
           }
         />

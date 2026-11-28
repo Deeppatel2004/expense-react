@@ -126,3 +126,24 @@ export function getSummary(token, month) {
     headers: authHeaders(token),
   });
 }
+
+// 9. Get monthly budgets
+export function getBudgets(token, month) {
+  const params = new URLSearchParams({ month });
+
+  return request(`/budgets?${params}`, {
+    headers: authHeaders(token),
+  });
+}
+
+// 10. Create a budget
+export function createBudget(token, body) {
+  return request("/budgets", {
+    method: "POST",
+    headers: {
+      ...authHeaders(token),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+}
