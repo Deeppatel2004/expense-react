@@ -1,3 +1,4 @@
+
 const BASE = import.meta.env.VITE_API_URL;
 
 // Add token to request headers
@@ -5,6 +6,27 @@ function authHeaders(token) {
   return {
     Authorization: `Bearer ${token}`,
   };
+}
+
+// Safely extract an error message from API response
+export function pickMessage(data, fallback) {
+  if (!data || typeof data !== "object") {
+    return fallback;
+  }
+
+  if (typeof data.message === "string") {
+    return data.message;
+  }
+
+  if (typeof data.error === "string") {
+    return data.error;
+  }
+
+  if (data.error && typeof data.error.message === "string") {
+    return data.error.message;
+  }
+
+  return fallback;
 }
 
 // Common function for API requests
@@ -21,7 +43,7 @@ async function request(url, options = {}) {
     const error = new Error(String(res.status));
 
     error.status = res.status;
-    error.apiMessage = data?.message || data?.error || "Something went wrong.";
+    error.apiMessage = pickMessage(data, "Something went wrong.");
 
     throw error;
   }
